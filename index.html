@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Prompt Share Website</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background: linear-gradient(135deg,#001f3f,#0f172a,#7f1d1d);
+      min-height:100vh;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    .container{
+      width:90%;
+      max-width:900px;
+      margin:auto;
+      padding:40px 20px;
+    }
+
+    .title{
+      text-align:center;
+      font-size:55px;
+      font-weight:900;
+      letter-spacing:2px;
+      margin-bottom:10px;
+      text-transform:uppercase;
+      color:white;
+      text-shadow:0 0 20px rgba(255,0,0,0.4);
+    }
+
+    .subtitle{
+      text-align:center;
+      color:#cbd5e1;
+      margin-bottom:40px;
+      font-size:18px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:25px;
+      padding:30px;
+      box-shadow:0 0 30px rgba(0,0,0,0.3);
+    }
+
+    .label{
+      font-size:18px;
+      margin-bottom:10px;
+      display:block;
+      font-weight:bold;
+      color:white;
+    }
+
+    input[type="text"],
+    textarea{
+      width:100%;
+      background:#0f172a;
+      border:2px solid rgba(255,255,255,0.1);
+      color:white;
+      padding:15px;
+      border-radius:15px;
+      margin-bottom:25px;
+      font-size:16px;
+      outline:none;
+    }
+
+    textarea{
+      resize:none;
+      height:140px;
+    }
+
+    input[type="file"]{
+      margin-bottom:25px;
+      color:white;
+    }
+
+    .preview{
+      width:100%;
+      margin-top:10px;
+      border-radius:20px;
+      overflow:hidden;
+      display:none;
+      border:3px solid rgba(255,255,255,0.15);
+    }
+
+    .preview img{
+      width:100%;
+      display:block;
+    }
+
+    .btn{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:15px;
+      background:white;
+      color:black;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      transition:0.3s;
+      margin-top:15px;
+    }
+
+    .btn:hover{
+      transform:scale(1.03);
+      background:#e2e8f0;
+    }
+
+    .generated-link{
+      margin-top:25px;
+      background:#111827;
+      padding:15px;
+      border-radius:15px;
+      word-break:break-all;
+      display:none;
+    }
+
+    .generated-link a{
+      color:#38bdf8;
+      text-decoration:none;
+      font-weight:bold;
+    }
+
+    .second-page{
+      display:none;
+    }
+
+    .photo-box{
+      width:100%;
+      border-radius:25px;
+      overflow:hidden;
+      margin-bottom:25px;
+      border:3px solid rgba(255,255,255,0.1);
+    }
+
+    .photo-box img{
+      width:100%;
+      display:block;
+    }
+
+    .section-title{
+      font-size:30px;
+      font-weight:900;
+      margin-bottom:15px;
+      text-transform:uppercase;
+    }
+
+    .description-box,
+    .prompt-box{
+      background:#111827;
+      padding:20px;
+      border-radius:18px;
+      margin-bottom:25px;
+      line-height:1.7;
+      color:#e2e8f0;
+    }
+
+    .copy-btn{
+      background:white;
+      color:black;
+      border:none;
+      padding:12px 25px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      margin-bottom:15px;
+    }
+
+    .copy-btn:hover{
+      background:#dbeafe;
+    }
+
+    @media(max-width:768px){
+      .title{
+        font-size:38px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FIRST PAGE -->
+  <div class="container first-page" id="firstPage">
+
+    <h1 class="title">AI PROMPT HUB</h1>
+    <p class="subtitle">
+      Create futuristic Gen-Z AI prompt showcase pages.
+    </p>
+
+    <div class="card">
+
+      <label class="label">Upload Photo</label>
+      <input type="file" id="imageInput" accept="image/*">
+
+      <div class="preview" id="previewBox">
+        <img id="previewImage">
+      </div>
+
+      <label class="label">Photo Description</label>
+      <textarea id="descriptionInput"
+        placeholder="Write description of your photo..."></textarea>
+
+      <label class="label">AI Prompt</label>
+      <textarea id="promptInput"
+        placeholder="Write AI prompt to create this image..."></textarea>
+
+      <button class="btn" onclick="createPage()">
+        CREATE PAGE
+      </button>
+
+      <div class="generated-link" id="generatedLinkBox">
+        <p style="margin-bottom:10px;font-weight:bold;">
+          Share Link:
+        </p>
+
+        <a href="#" id="shareLink"></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECOND PAGE -->
+  <div class="container second-page" id="secondPage">
+
+    <h1 class="title">AI PROMPT PAGE</h1>
+
+    <div class="card">
+
+      <div class="photo-box">
+        <img id="finalImage">
+      </div>
+
+      <div class="section-title">DESCRIPTION</div>
+
+      <div class="description-box" id="finalDescription"></div>
+
+      <div class="section-title">PROMPT</div>
+
+      <button class="copy-btn" onclick="copyPrompt()">
+        COPY PROMPT
+      </button>
+
+      <div class="prompt-box" id="finalPrompt"></div>
+
+      <button class="btn" onclick="generateSecondPageLink()">
+        CREATE LINK
+      </button>
+
+      <div class="generated-link" id="secondLinkBox">
+        <a href="#" id="secondPageLink"></a>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+
+let uploadedImage = "";
+
+const imageInput = document.getElementById("imageInput");
+
+imageInput.addEventListener("change", function(){
+
+  const file = this.files[0];
+
+  if(file){
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+      uploadedImage = e.target.result;
+
+      document.getElementById("previewBox").style.display = "block";
+
+      document.getElementById("previewImage").src = uploadedImage;
+    }
+
+    reader.readAsDataURL(file);
+  }
+});
+
+
+function createPage(){
+
+  const description =
+    document.getElementById("descriptionInput").value;
+
+  const prompt =
+    document.getElementById("promptInput").value;
+
+  if(uploadedImage === ""){
+    alert("Please upload an image");
+    return;
+  }
+
+  localStorage.setItem("photo", uploadedImage);
+  localStorage.setItem("description", description);
+  localStorage.setItem("prompt", prompt);
+
+  const url =
+    window.location.origin +
+    window.location.pathname +
+    "?page=second";
+
+  document.getElementById("generatedLinkBox").style.display = "block";
+
+  document.getElementById("shareLink").href = url;
+  document.getElementById("shareLink").innerText = url;
+
+  window.open(url, "_blank");
+}
+
+
+function loadSecondPage(){
+
+  const params = new URLSearchParams(window.location.search);
+
+  if(params.get("page") === "second"){
+
+    document.getElementById("firstPage").style.display = "none";
+
+    document.getElementById("secondPage").style.display = "block";
+
+    const image = localStorage.getItem("photo");
+    const description = localStorage.getItem("description");
+    const prompt = localStorage.getItem("prompt");
+
+    document.getElementById("finalImage").src = image;
+
+    document.getElementById("finalDescription").innerText = description;
+
+    document.getElementById("finalPrompt").innerText = prompt;
+  }
+}
+
+loadSecondPage();
+
+
+function copyPrompt(){
+
+  const text =
+    document.getElementById("finalPrompt").innerText;
+
+  navigator.clipboard.writeText(text);
+
+  alert("Prompt Copied!");
+}
+
+
+function generateSecondPageLink(){
+
+  const currentURL = window.location.href;
+
+  document.getElementById("secondLinkBox").style.display = "block";
+
+  document.getElementById("secondPageLink").href = currentURL;
+
+  document.getElementById("secondPageLink").innerText = currentURL;
+}
+
+</script>
+
+</body>
+</html>
